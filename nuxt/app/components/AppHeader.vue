@@ -3,8 +3,9 @@
     <v-container class="d-flex align-center">
       <Logo />
       <v-spacer/>
-      <v-btn text to="/add-route">Добавить маршрут</v-btn>
-      <v-btn @click="toggleTheme" text>Сменить тему</v-btn>
+      <div class = "action">
+        <v-icon @click="toggleTheme" icon="mdi-moon-waxing-crescent"></v-icon>
+      </div>
     </v-container>
   </v-app-bar>
 </template>
@@ -19,6 +20,12 @@
   height: 10vh;
   z-index: 100;
   border-bottom: 1px solid #ccc;
+
+  .action {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
 }
 </style>
 

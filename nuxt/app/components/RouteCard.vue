@@ -1,11 +1,10 @@
 <template>
-    <div class="route-card">
+    <v-card @click="openCard" class="route-card">
         <div class="route-card-header">
             <h1>{{route.title}}</h1>
             <span>{{route.description}}</span>
         </div>
-        <v-btn  class="primary btn-open" to="`/route/${props.props.id}`">Открыть</v-btn>
-    </div>
+    </v-card>
 </template>
 
 
@@ -13,6 +12,10 @@
     const props = defineProps({
         route:Object
     });
+
+    const openCard = () => {
+        navigateTo(`/view-route/${props.route.id}`);
+    };
 </script>
 
 <style scoped lang="scss">
@@ -22,7 +25,6 @@
     border: 1px solid #ccc;
     border-radius: 5px;
     padding: 30px;
-    margin-bottom: 10px;
     gap: 10px;
 
     .route-card-header {
