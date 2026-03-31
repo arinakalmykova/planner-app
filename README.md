@@ -1,75 +1,153 @@
-# Nuxt Minimal Starter
+```markdown
+# 🧭 Travel App
 
-Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+Веб-приложение для управления маршрутами путешествий.  
+Позволяет создавать маршруты, добавлять точки, искать и удобно просматривать поездки.
 
-## Setup
 
-Make sure to install dependencies:
+## ⚙️ Технологии
+
+- Vue 3 (Composition API)
+- Nuxt
+- Vuex
+- Vuetify
+- SCSS
+- Vitest
+- Vue Test Utils
+
+---
+
+## ✨ Функционал
+
+- 📍 Создание маршрутов
+- 🗺 Добавление точек маршрута
+- 🔍 Поиск и фильтрация маршрутов
+- 🗑 Удаление маршрутов и точек
+- 📄 Просмотр маршрута на отдельной странице
+
+---
+
+## ✨ Анимация и тема
+
+- Плавная анимация Vue при появлении карточек
+- Возможность менять тему приложения с помощью иконки в хэдере
+---
+
+## 🧪 Тестирование
+
+Проект покрыт unit и integration тестами.
+
+### ✅ Результаты тестов:
+
+```
+
+✓ app/tests/unit/RouteList.spec.js (1 test) 47ms
+✓ app/tests/unit/RouteCard.spec.js (2 tests) 67ms
+✓ app/tests/integration/Home.spec.js (1 test) 57ms
+✓ app/tests/unit/SearchBar.spec.js (1 test) 55ms
+✓ app/tests/unit/NewRouteDialog.spec.js (2 tests) 90ms
+✓ app/tests/unit/AppPointDialog.spec.js (2 tests) 85ms
+✓ app/tests/integration/ViewRoute.spec.js (3 tests) 133ms
+
+Test Files  7 passed (7)
+Tests       12 passed (12)
+Duration    17.61s
+
+````
+
+### 🔍 Покрытие:
+
+- Unit тесты компонентов:
+  - RouteCard
+  - RouteList
+  - SearchBar
+  - Dialog-компоненты
+
+- Integration тесты:
+  - Фильтрация маршрутов
+  - Работа страницы маршрута
+
+---
+
+## 🚀 Установка и запуск
 
 ```bash
-# npm
 npm install
-
-# pnpm
-pnpm install
-
-# yarn
-yarn install
-
-# bun
-bun install
-```
-
-## Development Server
-
-Start the development server on `http://localhost:3000`:
-
-```bash
-# npm
 npm run dev
+````
 
-# pnpm
-pnpm dev
+---
 
-# yarn
-yarn dev
-
-# bun
-bun run dev
-```
-
-## Production
-
-Build the application for production:
+## 🧪 Запуск тестов
 
 ```bash
-# npm
-npm run build
-
-# pnpm
-pnpm build
-
-# yarn
-yarn build
-
-# bun
-bun run build
+npm run test
 ```
 
-Locally preview production build:
+---
 
-```bash
-# npm
-npm run preview
+## 📁 Структура проекта
 
-# pnpm
-pnpm preview
+```
+components/
+  RouteCard.vue
+  RouteList.vue
+  SearchBar.vue
+  NewRouteDialog.vue
+  AppPointDialog.vue
 
-# yarn
-yarn preview
+pages/
+  index.vue
+  view-route/
 
-# bun
-bun run preview
+store/
+  store.js
+
+tests/
+  unit/
+  integration/
 ```
 
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+---
+
+## 📌 Особенности
+
+* Используется Composition API
+* Реализована реактивная фильтрация маршрутов
+* Архитектура с разделением на компоненты
+* Покрытие тестами (unit + integration)
+
+---
+
+## 💡 Планы на развитие
+
+* Авторизация пользователей
+* Сохранение маршрутов в облаке
+* Карта с отображением точек (например, через Leaflet)
+* Drag & Drop для точек маршрута
+
+---
+
+## 👩‍💻 Автор Калмыкова А.М.
+
+Разработано в рамках обучения 🚀
+
+```
+
+---
+
+## 📸 Скриншоты
+
+### 🏠 Главная страница (светлая тема)
+![Главная](./images/light.png)
+
+### 🏠 Главная страница (темная тема)
+![Главная](./images/dark.png)
+
+### 🔍 Поиск маршрутов
+![Поиск](./images/search.png)
+
+### 📄 Страница маршрута
+![Маршрут](./images/detail.png)
+
+---
