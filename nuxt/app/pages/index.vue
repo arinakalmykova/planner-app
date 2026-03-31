@@ -19,6 +19,9 @@
 </template>
 
 <script setup>
+  import NewRouteDialog from '../components/NewRouteDialog.vue';
+  import RouteList from '../components/RouteList.vue';
+  import SearchBar from '../components/SearchBar.vue';
   import {ref,computed,onMounted} from "vue";
   import store from '../store/store';
 

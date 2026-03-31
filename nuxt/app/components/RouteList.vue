@@ -10,6 +10,7 @@
 </template>
 
 <script setup>
+import RouteCard from './RouteCard.vue'
 const props = defineProps({
   routes: Array,
 });

@@ -1,6 +1,6 @@
 <template>
   <v-container v-if="route">
-    <v-icon class="arrow" @click="router.back()">mdi-arrow-left</v-icon>
+    <v-icon class="arrow" @click="router.back()" >mdi-arrow-left</v-icon>
 
     <h2 class="primary">Маршрут</h2>
     <div class="route-header">
@@ -13,7 +13,7 @@
       <template v-else>
         <h3>{{ routeCopy.title }}</h3>
         <p>{{ routeCopy.description }}</p>
-        <v-icon small @click="editingRoute = true">mdi-pencil</v-icon>
+        <v-icon small @click="editingRoute = true" data-test="edit-route">mdi-pencil</v-icon>
       </template>
     </div>
 
@@ -29,10 +29,10 @@
         <template v-if="editingPoint[point.id]">
           <v-text-field v-model="point.title" label="Название точки" />
           <v-textarea v-model="point.description" label="Описание точки" />
-          <v-btn small color="primary" @click="savePoint(point)"
+          <v-btn small color="primary" @click="savePoint(point)" data-test="save-route"
             >Сохранить</v-btn
           >
-          <v-btn small @click="cancelPointEdit(point)">Отмена</v-btn>
+          <v-btn small @click="cancelPointEdit(point)" data-test="cancel-route">Отмена</v-btn>
         </template>
         <template v-else>
           <h3>{{ point.title }}</h3>
@@ -40,7 +40,7 @@
           <v-icon small @click="editingPoint[point.id] = true"
             >mdi-pencil</v-icon
           >
-          <v-btn small color="red" @click="deletePoint(point.id)"
+          <v-btn small color="red" @click="deletePoint(point.id)" data-test="delete-point"
             >Удалить</v-btn
           >
         </template>
@@ -62,6 +62,8 @@
 </template>
 
 <script setup>
+
+import AppPointDialog from "../../components/AppPointDialog.vue";
 import { ref, computed, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import store from "../../store/store";
@@ -73,12 +75,14 @@ const routeId = Number(vueRoute.params.id);
 const showDialog = ref(false);
 
 const route = computed(() => store.getters.getRouteById(routeId));
-const routeCopy = ref({
-  title: "",
-  description: "",
+
+const routeCopy = ref(route.value ? JSON.parse(JSON.stringify(route.value)) : {
+  title: '',
+  description: '',
   points: [],
-  coverImage: "",
+  coverImage: ''
 });
+
 const editingRoute = ref(false);
 const editingPoint = ref({});
 
