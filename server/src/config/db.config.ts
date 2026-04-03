@@ -1,9 +1,18 @@
 import sqlite3 from "sqlite3";
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 sqlite3.verbose();
 
-const db = new sqlite3.Database("../../data/db.sqlite", function(err:Error | null) {
-  if (err) console.error(err);
-  else console.log("Connected database");
+const dbPath = path.join(__dirname, "../../data/db.sqlite");
+console.log("Database path:", dbPath); // Для отладки
+
+const db = new sqlite3.Database(dbPath, function(err: Error | null) {
+  if (err) console.error("Database connection error:", err);
+  else console.log("Connected to database");
 });
 
 db.serialize(() => {

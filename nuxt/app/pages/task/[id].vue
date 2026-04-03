@@ -1,129 +1,86 @@
 <template>
-  <v-container v-if="route">
-    <v-icon class="arrow" @click="router.back()" >mdi-arrow-left</v-icon>
+  <div v-if="task" class="task-detail">
 
-    <h2 class="primary">Маршрут</h2>
-    <div class="route-header">
-      <template v-if="editingRoute">
-        <v-text-field v-model="routeCopy.title" label="Название маршрута" />
-        <v-textarea v-model="routeCopy.description" label="Описание маршрута" />
-        <v-btn small color="primary" @click="saveRoute">Сохранить</v-btn>
-        <v-btn small @click="cancelRouteEdit">Отмена</v-btn>
-      </template>
-      <template v-else>
-        <h3>{{ routeCopy.title }}</h3>
-        <p>{{ routeCopy.description }}</p>
-        <v-icon small @click="editingRoute = true" data-test="edit-route">mdi-pencil</v-icon>
-      </template>
-    </div>
+    <!-- Кнопка назад -->
+    <Button class="back-btn" @click="router.back()">mdi-arrow-left</Button>
 
-    <img
-      v-if="routeCopy.coverImage"
-      :src="`http://localhost:3001/uploads/routes/${routeCopy.coverImage}`"
-      width="300"
-    />
-
-    <h2>Точки маршрута</h2>
-    <div v-if="routeCopy.points?.length">
-      <div v-for="point in routeCopy.points" :key="point.id" class="point">
-        <template v-if="editingPoint[point.id]">
-          <v-text-field v-model="point.title" label="Название точки" />
-          <v-textarea v-model="point.description" label="Описание точки" />
-          <v-btn small color="primary" @click="savePoint(point)" data-test="save-route"
-            >Сохранить</v-btn
-          >
-          <v-btn small @click="cancelPointEdit(point)" data-test="cancel-route">Отмена</v-btn>
-        </template>
-        <template v-else>
-          <h3>{{ point.title }}</h3>
-          <p>{{ point.description }}</p>
-          <v-icon small @click="editingPoint[point.id] = true"
-            >mdi-pencil</v-icon
-          >
-          <v-btn small color="red" @click="deletePoint(point.id)" data-test="delete-point"
-            >Удалить</v-btn
-          >
-        </template>
-        <img
-          v-if="point.image"
-          :src="`http://localhost:3001/uploads/points/${point.image}`"
-          width="200"
-        />
+    <!-- Заголовок и действия -->
+    <div class="task-header">
+      <h2>{{ task.title }}</h2>
+      <div class="actions">
+        <Button class="edit-btn" @click="editing = true">Редактировать</Button>
+        <Button class="delete-btn" @click="deleteTask">Удалить</Button>
       </div>
     </div>
-    <p v-else>Пока нет точек</p>
-    <v-btn @click="showDialog = true">Добавить точку</v-btn>
-    <AppPointDialog
-      v-model="showDialog"
-      :routeId="routeCopy.id"
-      @saved="refresh"
-    />
-  </v-container>
+
+    <!-- Форма редактирования -->
+    <div v-if="editing" class="edit-form">
+      <Input v-model="taskCopy.title" label="Заголовок" />
+      <Input v-model="taskCopy.description" label="Описание" />
+      <Input v-model="taskCopy.dueDate" label="Дедлайн" type="date" />
+      <Button @click="saveTask">Сохранить</Button>
+      <Button @click="cancelEdit">Отмена</Button>
+    </div>
+
+    <!-- Детали задачи -->
+    <div v-else class="task-info">
+      <p><strong>Описание:</strong> {{ task.description }}</p>
+      <p><strong>Дедлайн:</strong> {{ task.dueDate }}</p>
+      <p><strong>Дата создания:</strong> {{ task.createdAt }}</p>
+      <p><strong>Автор:</strong> {{ task.authorName }}</p>
+      <p><strong>Выполнено:</strong> {{ task.isCompleted ? "Да" : "Нет" }}</p>
+    </div>
+
+  </div>
+
+  <div v-else>
+    <p>Загрузка...</p>
+  </div>
 </template>
 
 <script setup>
 
-import AppPointDialog from "../../components/AppPointDialog.vue";
+imp<script setup>
 import { ref, computed, onMounted } from "vue";
-import { useRoute, useRouter } from "vue-router";
-import store from "../../store/store";
+import { useRouter, useRoute } from "vue-router";
+import { taskStore } from "../store/tasks";
+import Button from "../components/Button.vue";
+import Input from "../components/Input.vue";
 
-const vueRoute = useRoute();
 const router = useRouter();
-const routeId = Number(vueRoute.params.id);
+const route = useRoute();
 
-const showDialog = ref(false);
+const taskId = Number(route.params.id);
 
-const route = computed(() => store.getters.getRouteById(routeId));
+const editing = ref(false);
 
-const routeCopy = ref(route.value ? JSON.parse(JSON.stringify(route.value)) : {
-  title: '',
-  description: '',
-  points: [],
-  coverImage: ''
-});
+const task = computed(() => taskStore.getters.getTaskById(taskId));
 
-const editingRoute = ref(false);
-const editingPoint = ref({});
+const taskCopy = ref(task.value ? { ...task.value } : null);
+
 
 onMounted(async () => {
-  if (!store.state.routes.length) {
-    await store.dispatch("fetchRoutes");
+  if (!taskStore.state.tasks.length) {
+    await taskStore.dispatch("fetchTasks");
   }
-  if (route.value) {
-    routeCopy.value = JSON.parse(JSON.stringify(route.value));
-  }
+  if (task.value) taskCopy.value = { ...task.value };
 });
 
-const saveRoute = async () => {
-  await store.dispatch("updateRoute", { routeId, route: routeCopy.value });
-  editingRoute.value = false;
-  await store.dispatch("fetchRoutes");
+const deleteTask = async () => {
+  if (confirm("Вы уверены, что хотите удалить задачу?")) {
+    await taskStore.dispatch("deleteTask", taskId);
+    router.push("/tasks"); 
+  }
 };
 
-const cancelRouteEdit = () => {
-  routeCopy.value = JSON.parse(JSON.stringify(route.value));
-  editingRoute.value = false;
+const saveTask = async () => {
+  await taskStore.dispatch("updateTask", taskCopy.value);
+  editing.value = false;
 };
 
-const savePoint = async (point) => {
-  await store.dispatch("updatePoint", {
-    routeId,
-    pointId: point.id,
-    data: point,
-  });
-  editingPoint.value[point.id] = false;
-  await store.dispatch("fetchRoutes");
-};
-const cancelPointEdit = (point) => {
-  const originalPoint = route.value.points.find((p) => p.id === point.id);
-  Object.assign(point, originalPoint);
-  editingPoint.value[point.id] = false;
-};
-
-const deletePoint = async (pointId) => {
-  await store.dispatch("deletePoint", { routeId, pointId });
-  await store.dispatch("fetchRoutes");
+const cancelEdit = () => {
+  taskCopy.value = { ...task.value };
+  editing.value = false;
 };
 </script>
 

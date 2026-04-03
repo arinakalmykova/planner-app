@@ -1,16 +1,17 @@
 <template>
-  <v-text-field
+  <Input
     :model-value="searchQuery"
     @input="emit('update:searchQuery', $event.target.value)"
     append-icon="mdi-magnify"
     label="Поиск"
-  ></v-text-field>
+  ></Input>
 </template>
 
 <script setup>
-    defineProps({
-      searchQuery: String
-    });
+import Input from "../components/Input.vue";
+defineProps({
+  searchQuery: String,
+});
 
-    const emit = defineEmits(['update:searchQuery']);
+const emit = defineEmits(["update:searchQuery"]);
 </script>

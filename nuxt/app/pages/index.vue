@@ -1,47 +1,52 @@
 <template>
-  <v-container class="main">
-    <h1 class="text-main"> Мои путешествия </h1>
+  <div class="main">
     <SearchBar v-model="searchQuery" />
-    <div class="routes-block">
-      <template v-if="routes.length > 0">
-        <RouteList :routes="filtredRoutes"/>
+    <div class="tasks-block">
+      <template v-if="tasks.length > 0">
+        <TaskList :tasks="filtredTasks"/>
       </template>
       <template v-else>
         <p>У вас пока нет маршрутов</p>
       </template>
-      <v-icon @click="showDialog = true">mdi-plus-thick</v-icon>
+      <Button @click="showDialog = true">mdi-plus-thick</Button>
     </div>
-    <NewRouteDialog
+    <NewTaskDialog
       v-model="showDialog"
       @saved="refresh"
     />
-  </v-container>
+  </div>
 </template>
 
 <script setup>
-  import NewRouteDialog from '../components/NewRouteDialog.vue';
-  import RouteList from '../components/RouteList.vue';
+  import NewTaskDialog from '../components/NewTaskDialog.vue';
+  import TaskList from '../components/TaskList.vue';
   import SearchBar from '../components/SearchBar.vue';
+  import Button from '../components/Button.vue';
   import {ref,computed,onMounted} from "vue";
-  import store from '../store/store';
+  import taskStore from '../store/tasks';
+
+  definePageMeta({
+    middleware: "auth",
+    layout:"auth"
+  });
 
   const showDialog = ref(false);
   const searchQuery = ref('');
 
   onMounted(async() => {
-    if(!store.state.routes.length){
-      await store.dispatch('fetchRoutes');
+    if(!store.state.tasks.length){
+      await taskStore.dispatch('fetchTasks');
     }
   });
 
-  const routes = computed(() => store.state.routes);
+  const tasks = computed(() => store.state.tasks);
   const refresh = async () => {
-    await store.dispatch('fetchRoutes');
+    await taskStore.dispatch('fetchTasks');
   };
 
-  const filtredRoutes = computed(() => {
-    return routes.value.filter(route => 
-      route.title.toLowerCase().includes(searchQuery.value.toLowerCase()));
+  const filtredTasks = computed(() => {
+    return tasks.value.filter(task => 
+      task.title.toLowerCase().includes(searchQuery.value.toLowerCase()));
   });
 </script>
 
@@ -52,7 +57,7 @@
     flex-direction: column;
     gap: 30px;
 
-    .routes-block {
+    .tasks-block {
       display: flex;
       flex-direction: column;
       gap: 30px;

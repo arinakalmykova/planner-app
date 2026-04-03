@@ -1,101 +1,79 @@
 import { createStore } from "vuex";
+import { apiTaskRequest } from "../utils/api";
 
-const store = createStore({
+const taskStore = createStore({
   state: {
-    routes: [],
+    tasks: [],
+    loading: false,
   },
+
   mutations: {
-    setRoutes(state, routes) {
-      state.routes = routes;
+    setTasks(state, tasks) {
+      state.tasks = tasks;
     },
-    addRoute(state, route) {
-      state.routes.push(route);
+
+    addTask(state, task) {
+      state.tasks.push(task);
     },
-    updateRoute(state, updatedRoute) {
-      const index = state.routes.findIndex((r) => r.id === updatedRoute.id);
+
+    updateTask(state, updatedTask) {
+      const index = state.tasks.findIndex(t => t.id === updatedTask.id);
       if (index !== -1) {
-        state.routes[index] = updatedRoute;
+        state.tasks[index] = updatedTask;
       }
     },
-    deleteRoute(state, id) {
-      state.routes = state.routes.filter((i) => i.id !== id);
+
+    deleteTask(state, id) {
+      state.tasks = state.tasks.filter(t => t.id !== id);
     },
-    addPoint(state, { routeId, point }) {
-      const route = state.routes.find((r) => r.id === routeId);
-      if (route) {
-        if (!route.points) route.points = [];
-        route.points.push(point);
-      }
-    },
-    updatePoint(state, { routeId, pointId, data }) {
-      const route = state.routes.find((r) => r.id === routeId);
-      if (!route?.points) return;
-      const index = route.points.findIndex((p) => p.id === pointId);
-      if (index !== -1) {
-        route.points[index] = { ...route.points[index], ...data };
-      }
-    },
-    deletePoint(state, { routeId, pointId }) {
-      const route = state.routes.find((r) => r.id === routeId);
-      if (!route?.points) return;
-      route.points = route.points.filter((p) => p.id !== pointId);
+
+    setLoading(state, value) {
+      state.loading = value;
     },
   },
+
   actions: {
-    async fetchRoutes({ commit }) {
-      const data = await $fetch("http://localhost:3001/routes");
-      commit("setRoutes", data);
+    async fetchTasks({ commit }) {
+      commit("setLoading", true);
+
+      try {
+        const data = await apiTaskRequest("/tasks");
+        commit("setTasks", data);
+      } finally {
+        commit("setLoading", false);
+      }
     },
-    async createRoute({ commit }, route) {
-      const newRoute = await $fetch("http://localhost:3001/routes", {
+
+    async createTask({ commit }, task) {
+      const newTask = await apiTaskRequest("/tasks", {
         method: "POST",
-        body: route,
+        body: task,
       });
-      commit("addRoute", newRoute);
+
+      commit("addTask", newTask);
     },
-    async updateRoute({ commit }, { routeId, route }) {
-      const updatedRoute = await $fetch(`http://localhost:3001/routes/${routeId}`, {
+
+    async updateTask({ commit }, task) {
+      const updatedTask = await apiTaskRequest(`/tasks/${task.id}`, {
         method: "PUT",
-        body: route,
+        body: task,
       });
-      commit("updateRoute", updatedRoute );
+
+      commit("updateTask", updatedTask);
     },
-    async deleteRoute({ commit }, id) {
-      await $fetch(`http://localhost:3001/routes/${id}`, {
+
+    async deleteTask({ commit }, id) {
+      await apiTaskRequest(`/tasks/${id}`, {
         method: "DELETE",
       });
-      commit("deleteRoute", id);
-    },
-    async addPoint({ commit }, { routeId, formData }) {
-      const newPoint = await $fetch(
-        `http://localhost:3001/routes/${routeId}/points`,
-        {
-          method: "POST",
-          body: formData,
-        },
-      );
-      commit("addPoint", { routeId, point: newPoint });
-    },
-    async updatePoint({ commit }, { routeId, pointId, data }) {
-      const updatedPoint = await $fetch(
-        `http://localhost:3001/routes/${routeId}/points/${pointId}`,
-        { method: "PUT", body: data },
-      );
-      commit("updatePoint", { routeId, pointId, data: updatedPoint });
-    },
-    async deletePoint({ commit }, { routeId, pointId }) {
-      await $fetch(
-        `http://localhost:3001/routes/${routeId}/points/${pointId}`,
-        {
-          method: "DELETE",
-        },
-      );
-      commit("deletePoint", { routeId, pointId });
+
+      commit("deleteTask", id);
     },
   },
+
   getters: {
-    getRouteById: (state) => (id) => state.routes.find((r) => r.id === id),
+    allTasks: (state) => state.tasks,
   },
 });
 
-export default store;
+export default taskStore;

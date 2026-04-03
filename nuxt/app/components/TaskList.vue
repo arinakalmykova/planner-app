@@ -1,23 +1,23 @@
 <template>
-  <transition-group name="card" tag="div" class="routes-list" appear>
-    <RouteCard
-      v-for="route in routes"
-      :key="route.id"
-      :route="route"
+  <transition-group name="card" tag="div" class="tasks-list" appear>
+    <TaskCard
+      v-for="task in tasks"
+      :key="task.id"
+      :task="task"
       class="card"
     />
   </transition-group>
 </template>
 
 <script setup>
-import RouteCard from './RouteCard.vue'
+import TaskCard from './TaskCard.vue'
 const props = defineProps({
-  routes: Array,
+  tasks: Array,
 });
 </script>
 
 <style scoped lang="scss">
-.routes-list {
+.tasks-list {
   display: flex;
   flex-direction: column;
   gap: 20px;

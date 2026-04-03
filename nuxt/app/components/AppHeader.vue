@@ -1,13 +1,8 @@
 <template>
-  <v-app-bar flat class="header">
-    <v-container class="d-flex align-center">
-      <Logo />
-      <v-spacer/>
-      <div class = "action">
-        <v-icon @click="toggleTheme" icon="mdi-moon-waxing-crescent"></v-icon>
-      </div>
-    </v-container>
-  </v-app-bar>
+  <div class="header">
+    <h1>Мой список задач</h1>
+    <Button class="action">Добавить задачу</Button>
+  </div>
 </template>
 
 <style scoped>
@@ -30,13 +25,6 @@
 </style>
 
 <script setup>
-import { useNuxtApp } from '#app'
-
-const nuxtApp = useNuxtApp()
-const vuetify = nuxtApp.$vuetify
-
-const toggleTheme = () => {
-  vuetify.theme.global.name.value = vuetify.theme.global.name.value === 'dark' ? 'light' : 'dark';
-}
+import { Button } from './Button.vue'
 </script>
 
