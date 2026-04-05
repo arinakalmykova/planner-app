@@ -10,14 +10,26 @@ export const findUserByEmail = (email: string): Promise<User | null> => {
   });
 };
 
-export const createUser = (email: string, hashedPassword: string): Promise<number> => {
+export const createUser = (name: string, email: string, hashedPassword: string): Promise<number> => {
   return new Promise((resolve, reject) => {
     db.run(
-      `INSERT INTO users (email, password) VALUES (?, ?)`,
+      `INSERT INTO users (name, email, password) VALUES (?, ?, ?)`,
       [email, hashedPassword],
       function (err) {
         if (err) return reject(err);
         resolve(this.lastID);
+      }
+    );
+  });
+};
+
+export const listUsers = (): Promise<User[]> => {
+  return new Promise((resolve, reject) => {
+    db.all(
+      `SELECT * FROM users`,
+      (err, rows: User[]) => {
+        if (err) return reject(err);
+        resolve(rows ?? []);
       }
     );
   });

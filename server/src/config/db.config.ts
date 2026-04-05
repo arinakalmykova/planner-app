@@ -22,6 +22,7 @@ db.serialize(() => {
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             name TEXT,
             email TEXT,
+            password TEXT,
             role TEXT
         )
         `,
@@ -36,7 +37,8 @@ db.serialize(() => {
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             title TEXT,
             description TEXT,
-            dueDate TEXT,
+            dueDate TEXT, 
+            priority TEXT,
             isCompleted INTEGER,
             userId INTEGER,
             FOREIGN KEY(userId) REFERENCES users(id)

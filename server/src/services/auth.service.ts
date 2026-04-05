@@ -10,7 +10,7 @@ const JWT_SECRET = process.env.JWT_SECRET ?? "secret";
   if (existing) throw new Error("Email already exists");
 
   const hashed = await bcrypt.hash(data.password, 10);
-  const id = await createUser(data.email, hashed);
+  const id = await createUser(data.name, data.email, hashed);
   return { id };
 };
 

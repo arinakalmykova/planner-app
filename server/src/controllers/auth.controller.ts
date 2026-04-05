@@ -20,3 +20,13 @@ export const login = async (req:Request, res:Response) =>  {
         res.status(400).json({message: err.message});
     }
 }
+
+export const users = async (req:Request, res:Response) =>  {
+    try{
+        const data = await fetchUsers();
+        res.json({data});
+    }
+    catch (err:any) {
+        res.status(400).json({message: err.message});
+    }
+}

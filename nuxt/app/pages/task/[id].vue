@@ -1,10 +1,8 @@
 <template>
   <div v-if="task" class="task-detail">
 
-    <!-- Кнопка назад -->
-    <Button class="back-btn" @click="router.back()">mdi-arrow-left</Button>
+    <Button class="back-btn" @click="router.back()"><i class=" mdi mdi-arrow-left"></i></Button>
 
-    <!-- Заголовок и действия -->
     <div class="task-header">
       <h2>{{ task.title }}</h2>
       <div class="actions">
@@ -13,7 +11,6 @@
       </div>
     </div>
 
-    <!-- Форма редактирования -->
     <div v-if="editing" class="edit-form">
       <Input v-model="taskCopy.title" label="Заголовок" />
       <Input v-model="taskCopy.description" label="Описание" />
@@ -22,7 +19,6 @@
       <Button @click="cancelEdit">Отмена</Button>
     </div>
 
-    <!-- Детали задачи -->
     <div v-else class="task-info">
       <p><strong>Описание:</strong> {{ task.description }}</p>
       <p><strong>Дедлайн:</strong> {{ task.dueDate }}</p>
@@ -32,20 +28,14 @@
     </div>
 
   </div>
-
-  <div v-else>
-    <p>Загрузка...</p>
-  </div>
 </template>
 
 <script setup>
-
-imp<script setup>
 import { ref, computed, onMounted } from "vue";
 import { useRouter, useRoute } from "vue-router";
-import { taskStore } from "../store/tasks";
-import Button from "../components/Button.vue";
-import Input from "../components/Input.vue";
+import taskStore from "../../store/tasks";
+import Button from "../../components/Button.vue";
+import Input from "../../components/Input.vue";
 
 const router = useRouter();
 const route = useRoute();
@@ -53,17 +43,13 @@ const route = useRoute();
 const taskId = Number(route.params.id);
 
 const editing = ref(false);
-
 const task = computed(() => taskStore.getters.getTaskById(taskId));
 
 const taskCopy = ref(task.value ? { ...task.value } : null);
 
 
 onMounted(async () => {
-  if (!taskStore.state.tasks.length) {
-    await taskStore.dispatch("fetchTasks");
-  }
-  if (task.value) taskCopy.value = { ...task.value };
+  await taskStore.dispatch("fetchTasks");
 });
 
 const deleteTask = async () => {

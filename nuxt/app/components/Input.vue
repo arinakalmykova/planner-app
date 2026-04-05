@@ -22,30 +22,35 @@ const props = defineProps({
   placeholder: { type: String, default: '' },
   type: { type: String, default: 'text' },
   disabled: { type: Boolean, default: false },
-  id: { type: String, default: '' } // для label и input
+  id: { type: String, default: '' } 
 })
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .input-wrapper {
   display: flex;
   flex-direction: column;
-  margin-bottom: 1rem;
-}
+  align-items:flex-start;
+  gap:10px;
+  width:100%;
 
-.input-label {
-  margin-bottom: 0.3rem;
-  font-weight: 500;
-}
+  .input-label {
+    margin-bottom: 0.1em;
+    font-weight: 500;
+  }
 
-.input-field {
-  padding: 0.5rem 0.8rem;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 1rem;
-}
-.input-field:focus {
-  border-color: #4f46e5; /* красивый фиолетовый */
-  outline: none;
+  .input-field {
+    padding: 0.5rem 0.8rem;
+    border: 1px solid $color-border;
+    border-radius: 4px;
+    font-size: 1rem;
+    width:100%;
+    box-sizing:border-box;
+  }
+
+  .input-field:focus {
+    border-color: $color-button; 
+    outline: none;
+  }
 }
 </style>

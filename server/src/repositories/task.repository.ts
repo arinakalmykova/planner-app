@@ -5,13 +5,14 @@ export const createTask = (
   title: string,
   description: string,
   dueDate: string,
+  priority:string,
   userId: number
 ): Promise<number> => {
   return new Promise((resolve, reject) => {
     db.run(
-      `INSERT INTO tasks (title, description, dueDate, isCompleted, userId)
-       VALUES (?, ?, ?, 0, ?)`,
-      [title, description, dueDate, userId],
+      `INSERT INTO tasks (title, description, dueDate, priotity, isCompleted,  userId)
+       VALUES (?, ?, ?, ?, 0, ?)`,
+      [title, description, dueDate, priority, userId],
       function (err) {
         if (err) return reject(err);
         resolve(this.lastID);
@@ -47,14 +48,15 @@ export const updateTask = (
   title: string,
   description: string,
   dueDate: string,
+  priority:string,
   isCompleted: number
 ): Promise<void> => {
   return new Promise((resolve, reject) => {
     db.run(
       `UPDATE tasks 
-       SET title=?, description=?, dueDate=?, isCompleted=? 
+       SET title=?, description=?, dueDate=?, priority=?, isCompleted=?
        WHERE id=?`,
-      [title, description, dueDate, isCompleted, id],
+      [title, description, dueDate,priority, isCompleted, id],
       function (err) {
         if (err) return reject(err);
         resolve();
