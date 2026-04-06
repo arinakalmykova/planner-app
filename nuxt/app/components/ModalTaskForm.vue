@@ -106,32 +106,32 @@ const submitForm = async () => {
   justify-content: center;
   align-items: center;
   z-index: 9000;
-}
 
-.modal {
-  background: #fff;
-  padding: 2em;
-  border-radius: 12px;
-  width: 400px;
-  max-width: 90%;
-}
-
-.form {
-  display: flex;
-  flex-direction: column;
-  gap: 1em;
-
-  select {
-    padding: 0.5em;
-    border-radius: 6px;
-    border: 1px solid #ccc;
+  .modal {
+    background: $color-modal;
+    padding: 2em;
+    border-radius: 12px;
+    width: 400px;
+    max-width: 90%;
   }
-}
 
-.actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-  margin-top: 1em;
+  .form {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+
+    select {
+      padding: 0.5em;
+      border-radius: 6px;
+      border: 1px solid $color-border;
+    }
+  }
+
+  .actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 1em;
+  }
 }
 </style>

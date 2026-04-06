@@ -13,7 +13,7 @@
 import Input from "../components/Input.vue";
 
 defineProps({
-  modelValue: String, // <- для v-model
+  modelValue: String, 
 });
 
 const emit = defineEmits(["update:modelValue"]);

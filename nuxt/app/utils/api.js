@@ -36,7 +36,7 @@ export const apiTaskRequest = async (url, options = {}) => {
 
     if (err?.response?.status === 401) {
       localStorage.removeItem("token");
-      window.location.href = "/login";
+      window.location.href = "/auth";
     }
 
     throw err;
@@ -65,7 +65,7 @@ export const apiAuthRequest = async (url, options = {}) => {
 
     if (err?.response?.status === 401) {
       localStorage.removeItem("token");
-      window.location.href = "/login";
+      window.location.href = "/auth";
     }
 
     throw err;

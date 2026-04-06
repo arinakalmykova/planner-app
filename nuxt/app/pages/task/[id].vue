@@ -2,13 +2,15 @@
   <div class="task-detail-page">
     <div class="header">
       <Button @click="router.back()">Назад</Button>
-      <div class="actions">
+      <div class="actions" v-if="canEdit">
         <Button @click="openEdit">Редактировать</Button>
         <Button @click="deleteTask" class="delete">Удалить</Button>
       </div>
     </div>
 
-    <h1>{{ task.title }} <span class="priority">{{ task.priority }}</span></h1>
+    <h1>
+      {{ task.title }} <span class="priority">{{ task.priority }}</span>
+    </h1>
 
     <div class="info">
       <p><strong>Автор:</strong> {{ author }}</p>
@@ -42,7 +44,9 @@ const task = computed(() => taskStore.getters.getTaskById(taskId));
 const showEditModal = ref(false);
 
 const author = computed(() => {
-  return authStore.getters.getUserById(task.value?.userId)?.name || "Неизвестно";
+  return (
+    authStore.getters.getUserById(task.value?.userId)?.name || "Неизвестно"
+  );
 });
 
 const currentUser = computed(() => authStore.getters.getUser);
@@ -60,7 +64,7 @@ onMounted(async () => {
   }
 });
 
-const openEdit = () => showEditModal.value = true;
+const openEdit = () => (showEditModal.value = true);
 
 const reloadTask = async () => {
   await taskStore.dispatch("fetchTasks");
@@ -89,7 +93,7 @@ const deleteTask = async () => {
       gap: 10px;
 
       .delete {
-        background-color: #e53935;
+        background-color: $color-red;
         color: white;
       }
     }
@@ -101,8 +105,8 @@ const deleteTask = async () => {
 
     .priority {
       font-size: 1rem;
-      color: #fff;
-      background: #1976d2;
+      color: $color-modal;
+      background: $color-button;
       padding: 0.2em 0.5em;
       border-radius: 6px;
       margin-left: 1em;

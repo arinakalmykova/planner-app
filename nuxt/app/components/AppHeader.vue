@@ -55,6 +55,6 @@ const isAuth = computed(() => authStore.getters.isAuth);
 
 const logout = () => {
   authStore.commit("logout");
-  router.push("/login");
+  router.push("/auth");
 };
 </script>

@@ -6,97 +6,52 @@
         <p class="description-login">Управляйте задачами эффективно</p>
       </div>
 
-      <!-- Форма Входа -->
-      <form v-if="loginSelected" @submit.prevent="submitLogin" class="form">
-        <h1>Вход</h1>
+      <!-- Форма входа -->
+      <AuthForm
+        v-if="loginSelected"
+        type="login"
+        :form="formLogin"
+        :errors="errorsLogin"
+        @update:form="formLogin = $event"
+        @submit="submitLogin"
+        @toggle="loginSelected = false"
+      />
 
-        <Input v-model="formLogin.email" label="Email" />
-        <span v-if="errorsLogin.email" class="error">{{
-          errorsLogin.email
-        }}</span>
-
-        <Input v-model="formLogin.password" type="password" label="Пароль" />
-        <span v-if="errorsLogin.password" class="error">{{
-          errorsLogin.password
-        }}</span>
-
-        <Button type="submit">Войти</Button>
-
-        <p>
-          Нет аккаунта?
-          <span @click="loginSelected = false" class="link"
-            >Зарегистрироваться</span
-          >
-        </p>
-      </form>
-
-      <!-- Форма Регистрации -->
-      <!-- Форма Регистрации -->
-      <form v-else @submit.prevent="submitRegister" class="form">
-        <h1>Регистрация</h1>
-
-        <!-- Имя -->
-        <Input v-model="formRegister.name" label="Имя" />
-        <span v-if="errorsRegister.name" class="error">{{
-          errorsRegister.name
-        }}</span>
-
-        <!-- Email -->
-        <Input v-model="formRegister.email" label="Email" />
-        <span v-if="errorsRegister.email" class="error">{{
-          errorsRegister.email
-        }}</span>
-
-        <!-- Пароль -->
-        <Input v-model="formRegister.password" type="password" label="Пароль" />
-        <span v-if="errorsRegister.password" class="error">{{
-          errorsRegister.password
-        }}</span>
-
-        <Button type="submit">Зарегистрироваться</Button>
-
-        <p>
-          Уже есть аккаунт?
-          <span @click="loginSelected = true" class="link">Войти</span>
-        </p>
-      </form>
+      <!-- Форма регистрации -->
+      <AuthForm
+        v-else
+        type="register"
+        :form="formRegister"
+        :errors="errorsRegister"
+        @update:form="formRegister = $event"
+        @submit="submitRegister"
+        @toggle="loginSelected = true"
+      />
     </div>
   </div>
 </template>
 
 <script setup>
-import Button from "../components/Button.vue";
-import Input from "../components/Input.vue";
 import { ref } from "vue";
-import authStore from "../store/auth";
 import { useRouter } from "vue-router";
+import authStore from "../store/auth";
+import AuthForm from "../components/AuthForm.vue";
 
 const router = useRouter();
 const loginSelected = ref(true);
 
-definePageMeta({
-  middleware: "auth",
-  layout: "auth",
-});
+// Формы
+const formLogin = ref({ email: "", password: "" });
+const formRegister = ref({ name: "", email: "", password: "" });
 
-const formLogin = ref({
-  email: "",
-  password: "",
-});
-const formRegister = ref({
-  name: "",
-  email: "",
-  password: "",
-});
-
+// Ошибки
 const errorsLogin = ref({});
 const errorsRegister = ref({});
 
-const validateEmail = (email) => {
-  const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return re.test(email);
-};
+// Валидация email
+const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
+// Валидация форм
 const validateLogin = () => {
   errorsLogin.value = {};
   if (!formLogin.value.email) errorsLogin.value.email = "Введите email";
@@ -112,22 +67,22 @@ const validateLogin = () => {
 
 const validateRegister = () => {
   errorsRegister.value = {};
-
   if (!formRegister.value.name) errorsRegister.value.name = "Введите имя";
 
   if (!formRegister.value.email) errorsRegister.value.email = "Введите email";
   else if (!validateEmail(formRegister.value.email))
     errorsRegister.value.email = "Некорректный email";
 
-  if (!formRegister.value.password)
-    errorsRegister.value.password = "Введите пароль";
+  if (!formRegister.value.password) errorsRegister.value.password = "Введите пароль";
   else if (formRegister.value.password.length < 6)
     errorsRegister.value.password = "Пароль минимум 6 символов";
 
   return Object.keys(errorsRegister.value).length === 0;
 };
 
-const submitLogin = async () => {
+// Сабмит логина
+const submitLogin = async (form) => {
+  formLogin.value = form;
   if (!validateLogin()) return;
   try {
     await authStore.dispatch("login", formLogin.value);
@@ -137,11 +92,13 @@ const submitLogin = async () => {
   }
 };
 
-const submitRegister = async () => {
+// Сабмит регистрации
+const submitRegister = async (form) => {
+  formRegister.value = form;
+  if (!validateRegister()) return;
   try {
     await authStore.dispatch("register", formRegister.value);
     alert("Регистрация прошла успешно");
-
     loginSelected.value = true;
   } catch (err) {
     errorsRegister.value.general = err.message || "Ошибка при регистрации";
