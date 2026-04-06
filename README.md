@@ -85,21 +85,22 @@
 
 ## 🛠 Технологии
 
-| Компонент      | Технология               |
-| -------------- | ------------------------ |
-| Фронтенд       | Nuxt 3, Vue 3, Vuex      |
-| UI             | Компоненты + SCSS        |
-| Аутентификация | JWT + localStorage       |
-| Backend        | Node.js, SQLite, Express |
-| API            | RESTful API              |
-| Router         | Защищённые маршруты      |
+| Компонент      | Технология                           |
+| -------------- | ------------------------------------ |
+| Фронтенд       | Nuxt 3, Vue 3, Vuex                  |
+| UI             | Компоненты + SCSS                    |
+| Аутентификация | JWT + localStorage                   |
+| Backend        | Node.js, SQLite, Express, TypeScript |
+| API            | RESTful API                          |
+| Router         | Защищённые маршруты                  |
 
 ---
 
 ## 🗂 Структура репозитория
 
 ```
-📁 app/
+📁 nuxt/
+├─ 📁 assets/
 ├─ 📁 components/
 │   ├─ AuthForm.vue
 │   ├─ TaskCard.vue
@@ -109,38 +110,57 @@
 │   ├─ AppHeader.vue
 │   ├─ Button.vue
 │   ├─ Input.vue
-    ├─ ErrorModal.vue
-    ├─ Loader.vue
-    ├─ SearchBar.vue
-    ├─ TaskList.vue
+│   ├─ ErrorModal.vue
+│   ├─ Loader.vue
+│   ├─ SearchBar.vue
+│   └─ TaskList.vue
 ├─ 📁 pages/
 │   ├─ index.vue
 │   ├─ auth.vue
-│   ├─ task/
+│   └─ task/
 │       └─ [id].vue
 ├─ 📁 layouts/
 │   ├─ main.vue
-│   ├─ auth.vue
+│   └─ auth.vue
 ├─ 📁 store/
 │   ├─ auth.js
 │   ├─ tasks.js
-│   ├─ ui.js
+│   └─ ui.js
 ├─ 📁 utils/
 │   └─ api.js
 ├─ nuxt.config.ts
-├─ package.json
+└─ package.json
 
-├─ 📁 server/
-│   ├─ server.js
-│   ├─ controllers/
-│   │   └─ tasks.controller.js
-│   │   └─ auth.controller.js
-│   ├─ entities/
-│   │   └─ task.entity.js
-│   │   └─ user.entity.js
-│   ├─ config/
-│       └─ db.config.js
-└─ README.md
+📁 server/
+├─ 📁 src/
+│   ├─ 📁 controllers/
+│   │   ├─ tasks.controller.ts
+│   │   └─ auth.controller.ts
+│   ├─ 📁 entities/
+│   │   ├─ task.entity.ts
+│   │   └─ user.entity.ts
+│   ├─ 📁 dto/
+│   │   ├─ task.dto.ts
+│   │   └─ auth.dto.ts
+│   ├─ 📁 config/
+│   │   └─ db.config.ts
+│   ├─ 📁 middlewares/
+│   │   └─ auth.middleware.ts
+│   ├─ 📁 types/
+│   │   └─ express.d.ts
+│   ├─ 📁 repositories/
+│   │   ├─ task.repository.ts
+│   │   └─ user.repository.ts
+│   ├─ 📁 services/
+│   │   ├─ task.service.ts
+│   │   └─ auth.service.ts
+│   ├─ 📁 routes/
+│   │   ├─ task.routes.ts
+│   │   └─ user.routes.ts
+│   └─ app.ts
+├─ 📁 data/
+│   └─ db.sqlite
+└─ package.json
 ```
 
 ---
@@ -172,7 +192,7 @@
 ![List view](images/active.png)
 
 #### Выполненные задачи
-![List view](images/completed.png)
+![List view](images/comleted.png)
 
 #### 🔍 Поиск
 ![Search tasks](images/search.png)
@@ -191,19 +211,115 @@
 * Node.js + Express + SQLite
 * REST API для работы с задачами и пользователями:
 
-  * `POST /register` — регистрация
-  * `POST /login` — вход
-  * `GET /tasks` — список задач пользователя
-  * `POST /tasks` — создание задачи
-  * `PUT /tasks/:id` — обновление задачи
-  * `DELETE /tasks/:id` — удаление задачи
+  * `POST /api/auth/register` — регистрация
+  * `POST /api/auth/login` — вход
+  * `GET /api/tasks` — список задач пользователя
+  * `POST /api/tasks` — создание задачи
+  * `PUT /api/tasks/:id` — обновление задачи
+  * `DELETE /api/tasks/:id` — удаление задачи
 * JWT для аутентификации
 * SQLite хранит задачи и пользователей
-* Модули: контроллеры, сущности (entities), конфиг БД
+* Модули: контроллеры, сущности (entities), конфиг БД, сервисы, роуты, миддлвейр, dto и тд
 
 ---
 
-## ⚡ Запуск проекта
+## ⚡ Требования и установка — что нужно скачать и настроить
+
+Перед тем как начать работу с проектом, разработчикам нужно подготовить окружение.
+
+### 📌 1) Установить Node.js (обязательно)
+
+🔹 Проект написан на **Node.js + Nuxt 3**, поэтому требуется:
+
+```bash
+Node.js v18 или новее (рекомендуется LTS)
+```
+
+📌 Nuxt 3 работает только на Node.js и требует современного движка и менеджера пакетов для установки зависимостей. ([nweb42.com][1])
+
+Проверить версию:
+
+```bash
+node -v
+```
+
+Если версия ниже — обнови через nvm, официальные инсталляторы или другой менеджер версий.
+
+---
+
+### 📌 2) Менеджер пакетов
+
+Проект использует зависимости из `package.json`, которые устанавливаются через:
+
+```bash
+npm install
+# или
+yarn install
+# или
+pnpm install
+```
+
+📌 Можно использовать любой удобный менеджер пакетов (npm, yarn, pnpm). ([nweb42.com][1])
+
+---
+
+### 📌 3) Поддержка TypeScript (для backend’a)
+
+Бэкенд написан на **TypeScript**, поэтому разработчикам нужны инструменты для TypeScript:
+
+✅ Установить TypeScript и типы (если их нет):
+
+```bash
+npm install -D typescript
+npm install -D ts-node @types/node
+```
+
+🔹 `ts-node` позволяет запускать `.ts` файлы без предварительной компиляции через `tsc`. ([DEV Community][2])
+---
+
+### 📌 4) SQLite и драйвер для него
+
+Проект использует SQLite в backend’e, поэтому необходимо установить драйвер:
+
+```bash
+npm install sqlite3
+```
+
+🔹 SQLite — это встроенная база данных, которая не требует отдельного сервера, но требует соответствующий npm‑пакет для Node.js.
+
+---
+
+### 📌 5) Создать `.env` и переменные окружения
+
+Файл `.env` уже игнорируется в `.gitignore`, и каждому разработчику нужно создать его локально:
+
+```
+API_BASE_URL=http://localhost:3001/api
+JWT_SECRET=секретный_ключ
+DATABASE_PATH=./server/data/db.sqlite
+```
+
+✔ без этого backend **не запустится корректно**.
+
+---
+
+### 📌 6) Nodemon (опционально)
+
+Для удобного запуска backend’a во время разработки:
+
+```bash
+npm install -D nodemon
+```
+
+Запуск:
+
+```bash
+npx nodemon src/app.ts
+```
+
+---
+
+## 🚀 Запуск проекта — по шагам
 
 ### 1) Установка зависимостей
 
@@ -215,32 +331,32 @@ yarn install
 
 ---
 
-### 2) Настройка переменных окружения
+### 2) Настройка `.env`
 
-Создать `.env` в корне:
+Создаём `.env` в корне и добавляем:
 
-```bash
-API_BASE_URL=http://localhost:3001/api
-JWT_SECRET=your_jwt_secret
+```
+JWT_SECRET=твой_секрет
+JWT_EXPIRES_IN=3600
 ```
 
 ---
 
-### 3) Запуск backend
+### 3) Запуск backend (Node.js + Express + TS)
 
 ```bash
-node backend/server.js
+npm run dev
 ```
 
-или с nodemon:
+или через Nodemon:
 
 ```bash
-nodemon backend/server.js
+nodemon src/app.ts
 ```
 
 ---
 
-### 4) Запуск фронтенда
+### 4) Запуск frontend (Nuxt 3)
 
 ```bash
 npm run dev
@@ -257,15 +373,6 @@ yarn dev
 * Сохранение задач на сервере через REST API
 * Автозагрузка задач после редактирования
 * Быстрые фильтры и сортировка по всем полям
-
----
-
-## 📷 Примеры интерфейса
-
-* Список задач
-* Добавление/редактирование задачи через модалку
-* Детальная страница с приоритетом, автором и датами
-* Фильтры и поиск
 
 ---
 
