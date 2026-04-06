@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@mdi/font": "^7.4.47",
+    "jwt-decode": "^4.0.0",
     "multer": "^2.1.1",
     "nuxt": "^4.4.2",
     "sass": "^1.98.0",

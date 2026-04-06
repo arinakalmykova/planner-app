@@ -1,20 +1,20 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import type { RegisterDto, LoginDto } from "../dto/auth.dto.js";
-import { findUserByEmail, createUser } from "../repositories/user.repository.js";
+import { findUserByEmail, createUser, listUsers } from "../repositories/user.repository.js";
 
 const JWT_SECRET = process.env.JWT_SECRET ?? "secret";
 
- const registerUser = async (data: RegisterDto) => {
+ export const registerUser = async (data: RegisterDto) => {
   const existing = await findUserByEmail(data.email);
   if (existing) throw new Error("Email already exists");
 
   const hashed = await bcrypt.hash(data.password, 10);
-  const id = await createUser(data.name, data.email, hashed);
+  const id = await createUser(data.name, data.email, hashed,"user");
   return { id };
 };
 
- const loginUser = async (data: LoginDto) => {
+ export const loginUser = async (data: LoginDto) => {
   const user = await findUserByEmail(data.email);
   if (!user) throw new Error("Invalid credentials");
 
@@ -25,7 +25,21 @@ const JWT_SECRET = process.env.JWT_SECRET ?? "secret";
     expiresIn: "1h",
   });
 
-  return token;
+  return {
+    token,
+    user: {
+      id: user.id,
+      name: user.name,
+      role: user.role,
+    },
+  };
 };
 
-export { registerUser, loginUser };
+export const fetchUsers = async () => {
+  const users = await listUsers();
+  if (!users) throw new Error("Invalid credentials");
+
+  return users;
+};
+
+

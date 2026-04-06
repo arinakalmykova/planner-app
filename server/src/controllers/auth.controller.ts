@@ -1,5 +1,5 @@
 import type {Request, Response} from "express";
-import {registerUser, loginUser} from "../services/auth.service.js";
+import {registerUser, loginUser, fetchUsers} from "../services/auth.service.js";
 
 export const register = async (req:Request, res:Response) =>  {
     try{
@@ -13,8 +13,8 @@ export const register = async (req:Request, res:Response) =>  {
 
 export const login = async (req:Request, res:Response) =>  {
     try{
-        const token = await loginUser(req.body);
-        res.json({token});
+        const result = await loginUser(req.body);
+        res.json(result);
     }
     catch (err:any) {
         res.status(400).json({message: err.message});
@@ -24,7 +24,7 @@ export const login = async (req:Request, res:Response) =>  {
 export const users = async (req:Request, res:Response) =>  {
     try{
         const data = await fetchUsers();
-        res.json({data});
+        res.json(data);
     }
     catch (err:any) {
         res.status(400).json({message: err.message});

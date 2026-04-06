@@ -1,7 +1,5 @@
 <template>
-  <v-app>
-    <v-main>
+    <main>
       <slot />
-    </v-main>
-  </v-app>
+    </main>
 </template>

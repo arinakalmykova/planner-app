@@ -10,11 +10,11 @@ export const findUserByEmail = (email: string): Promise<User | null> => {
   });
 };
 
-export const createUser = (name: string, email: string, hashedPassword: string): Promise<number> => {
+export const createUser = (name: string, email: string, hashedPassword: string, role:string): Promise<number> => {
   return new Promise((resolve, reject) => {
     db.run(
-      `INSERT INTO users (name, email, password) VALUES (?, ?, ?)`,
-      [email, hashedPassword],
+      `INSERT INTO users (name, email, password,role) VALUES (?, ?, ?,?)`,
+      [name,email, hashedPassword,role],
       function (err) {
         if (err) return reject(err);
         resolve(this.lastID);

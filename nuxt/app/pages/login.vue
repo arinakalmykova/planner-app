@@ -31,14 +31,23 @@
       </form>
 
       <!-- Форма Регистрации -->
+      <!-- Форма Регистрации -->
       <form v-else @submit.prevent="submitRegister" class="form">
         <h1>Регистрация</h1>
 
+        <!-- Имя -->
+        <Input v-model="formRegister.name" label="Имя" />
+        <span v-if="errorsRegister.name" class="error">{{
+          errorsRegister.name
+        }}</span>
+
+        <!-- Email -->
         <Input v-model="formRegister.email" label="Email" />
         <span v-if="errorsRegister.email" class="error">{{
           errorsRegister.email
         }}</span>
 
+        <!-- Пароль -->
         <Input v-model="formRegister.password" type="password" label="Пароль" />
         <span v-if="errorsRegister.password" class="error">{{
           errorsRegister.password
@@ -60,7 +69,7 @@ import Button from "../components/Button.vue";
 import Input from "../components/Input.vue";
 import { ref } from "vue";
 import authStore from "../store/auth";
-import {useRouter} from "vue-router";
+import { useRouter } from "vue-router";
 
 const router = useRouter();
 const loginSelected = ref(true);
@@ -75,6 +84,7 @@ const formLogin = ref({
   password: "",
 });
 const formRegister = ref({
+  name: "",
   email: "",
   password: "",
 });
@@ -102,6 +112,9 @@ const validateLogin = () => {
 
 const validateRegister = () => {
   errorsRegister.value = {};
+
+  if (!formRegister.value.name) errorsRegister.value.name = "Введите имя";
+
   if (!formRegister.value.email) errorsRegister.value.email = "Введите email";
   else if (!validateEmail(formRegister.value.email))
     errorsRegister.value.email = "Некорректный email";
@@ -127,6 +140,9 @@ const submitLogin = async () => {
 const submitRegister = async () => {
   try {
     await authStore.dispatch("register", formRegister.value);
+    alert("Регистрация прошла успешно");
+
+    loginSelected.value = true;
   } catch (err) {
     errorsRegister.value.general = err.message || "Ошибка при регистрации";
   }
@@ -134,13 +150,12 @@ const submitRegister = async () => {
 </script>
 
 <style scoped lang="scss">
-
 .main {
   height: 100vh;
   margin: 0;
   display: flex;
-  justify-content: center; 
-  align-items: center; 
+  justify-content: center;
+  align-items: center;
 
   .login {
     display: flex;

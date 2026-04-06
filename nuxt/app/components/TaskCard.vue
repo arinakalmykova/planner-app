@@ -19,7 +19,7 @@
         <p>{{ author }}</p>
         <p>{{ task.dueDate }}</p>
       </div>
-      <div class="task-card-actions">
+      <div class="task-card-actions" v-if="canEdit">
         <Button @click.stop="editTask">Редактировать</Button>
         <Button @click.stop="deleteTask">Удалить</Button>
       </div>
@@ -39,6 +39,15 @@ const props = defineProps({
   task: Object,
 });
 
+const currentUser = computed(() => authStore.getters.getUser);
+
+const canEdit = computed(() => {
+  return (
+    currentUser.value?.role === "admin" ||
+    currentUser.value?.id === props.task.userId
+  );
+});
+
 const openCard = () => {
   router.push(`/task/${props.task.id}`);
 };
@@ -53,7 +62,9 @@ const editTask = () => {
   router.push(`/task/${props.task.id}`);
 };
 
-const author = computed(() => authStore.getters.getUserById(props.task.userId)?.name || "Неизвестно");
+const author = computed(
+  () => authStore.getters.getUserById(props.task.userId)?.name || "Неизвестно",
+);
 
 const toggleComplete = async () => {
   taskStore.commit("updateTask", {
@@ -67,7 +78,6 @@ const toggleComplete = async () => {
       isCompleted: !props.task.isCompleted,
     });
   } catch (err) {
-
     taskStore.commit("updateTask", props.task);
   }
 };
@@ -114,12 +124,12 @@ const toggleComplete = async () => {
   .task-card-info {
     display: flex;
     flex-direction: row;
-    gap:70px;
+    gap: 80px;
 
     .category {
       display: flex;
       flex-direction: row;
-      gap: 80px;
+      gap: 120px;
     }
 
     .task-card-actions {

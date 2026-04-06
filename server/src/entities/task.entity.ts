@@ -5,5 +5,5 @@ export interface Task {
     dueDate:string;
     isCompleted:boolean;
     userId:number;
-    priority: "low" | "medium" | "high";
+    priority: "низкий" | "средний" | "высокий";
 }

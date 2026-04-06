@@ -19,8 +19,8 @@ export const create = async (req: Request, res: Response) => {
 export const show = async (req: Request, res: Response) => {
   try {
     const userId = req.user.id;
-
-    const tasks = await getTasksService(userId);
+    const userRole = req.user.role;
+    const tasks = await getTasksService(userId,userRole);
 
     res.json(tasks);
   } catch (err: any) {
@@ -31,8 +31,8 @@ export const show = async (req: Request, res: Response) => {
 export const update = async (req: Request, res: Response) => {
   try {
     const userId = req.user.id;
-
-    await updateTaskService(Number(req.params.id), req.body, userId);
+    const userRole = req.user.role;
+    await updateTaskService(Number(req.params.id), req.body, userId, userRole);
 
     res.json({ message: "Updated" });
   } catch (err: any) {
@@ -43,8 +43,8 @@ export const update = async (req: Request, res: Response) => {
 export const delTask = async (req: Request, res: Response) => {
   try {
     const userId = req.user.id;
-
-    await deleteTaskService(Number(req.params.id), userId);
+    const userRole = req.user.role;
+    await deleteTaskService(Number(req.params.id), userId, userRole);
 
     res.json({ message: "Deleted" });
   } catch (err: any) {

@@ -1,21 +1,22 @@
 <template>
   <div class="search">
     <Input
-      :model-value="searchQuery"
-      @input="emit('update:searchQuery', $event.target.value)"
+      :model-value="modelValue"
+      @input="emit('update:modelValue', $event.target.value)"
       class="search-input"
-    ></Input>
+    />
     <i class="mdi mdi-magnify icon"></i>
   </div>
 </template>
 
 <script setup>
 import Input from "../components/Input.vue";
+
 defineProps({
-  searchQuery: String,
+  modelValue: String, // <- для v-model
 });
 
-const emit = defineEmits(["update:searchQuery"]);
+const emit = defineEmits(["update:modelValue"]);
 </script>
 
 <style scoped lang="scss">

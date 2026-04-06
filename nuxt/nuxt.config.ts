@@ -3,6 +3,9 @@ export default defineNuxtConfig({
     '@mdi/font/css/materialdesignicons.css',
     '@/assets/styles/main.scss',
   ],
+  plugins: [
+    '~/plugins/auth-init.client.js'
+  ],
   vite: {
     css: {
       preprocessorOptions: {

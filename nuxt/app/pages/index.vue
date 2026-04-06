@@ -66,6 +66,7 @@ import SearchBar from "../components/SearchBar.vue";
 import Button from "../components/Button.vue";
 import { ref, computed, onMounted } from "vue";
 import taskStore from "../store/tasks";
+import authStore from "../store/auth";
 
 definePageMeta({
   middleware: "auth",
@@ -78,6 +79,7 @@ const sortKey = ref("dueDate");
 const sortAsc = ref(true);
 
 onMounted(async () => {
+  await authStore.dispatch("fetchUsers");
   await taskStore.dispatch("fetchTasks");
 });
 
@@ -168,7 +170,9 @@ const filteredTasks = computed(() => {
   }
   .section-titles {
     border-bottom: 1px solid $color-border;
-
+    position: relative; 
+    z-index:1000;
+    
     .titles {
       display: flex;
       flex-direction: row;
@@ -181,7 +185,7 @@ const filteredTasks = computed(() => {
     .right {
       display: flex;
       flex-direction: row;
-      gap:70px;
+      gap:80px;
     }
 
     .title {
