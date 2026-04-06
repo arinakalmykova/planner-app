@@ -1,4 +1,5 @@
 # 📌 README — ToDo Planner App (Nuxt + Vuex + SQLite)
+## Автор: Калмыкова А.М.
 
 ## 📍 Название проекта
 
